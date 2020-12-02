@@ -1,18 +1,21 @@
-file1 = open('c:\\Users\\Cam\\Documents\\code\\AdventOfCode2020\\1\\input.txt', 'r') 
-Lines = file1.readlines() 
-  
-singleDict = dict()
-pairDict = dict()
-for line in Lines:
-    one = int(line.strip())
-    goal = 2020-one
+def doTheThing(lines):
+    singleDict = dict()
+    pairDict = dict()
+    for line in lines:
+        one = int(line.strip())
+        goal = 2020-one
 
-    if (goal in pairDict):
-        print(one*pairDict[goal])
+        if (goal in pairDict):
+            return one*pairDict[goal]
 
-    singleDict[one] = one
+        singleDict[one] = one
 
-    for item in singleDict:
-        two = item + one
-        if (two < 2020):
-            pairDict[two] = one * item
+        for item in singleDict:
+            two = item + one
+            if two < 2020:
+                pairDict[two] = one * item
+    return None
+
+f = f = open('input.txt', 'r')
+lines = f.readlines()
+print(doTheThing(lines))
