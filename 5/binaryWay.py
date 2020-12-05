@@ -1,20 +1,13 @@
-def Tree(highChar, string):
-    binary = ''
-    for i in range(len(string)):
-        if string[i] == highChar:
-            binary = binary + '1'
-        else:
-            binary = binary + '0'
-    return int(binary, 2)
+def Binary(highChar, lowChar, string):
+    string = string.replace(highChar, '1').replace(lowChar, '0')
+    return int(string, 2)
 
 f = open('input.txt', 'r')
 lines = f.readlines()
 highest = 0
 listOfIds = []
 for line in lines:
-    first = line[:7]
-    second = line.strip()[7:]
-    seatId = Tree('B', first)*8 + Tree('R', second)
+    seatId = Binary('B', 'F', line[:7])*8 + Binary('R', 'L', line.strip()[7:])
     listOfIds.append(seatId)
     highest = max(seatId, highest)
 print(highest)
