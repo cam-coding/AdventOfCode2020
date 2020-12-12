@@ -1,117 +1,97 @@
-
 def get_lines():
     with open("input.txt") as f:
         return [line.strip() for line in f.readlines()]
 
-def doLogic(Matrix):
+Matrix = [list(line) for line in get_lines()]
+WIDTH = len(Matrix[0])
+HEIGHT = len(Matrix)    
+
+def doLogic():
     newMatrix = [l[:] for l in Matrix]
-    for y in range(len(Matrix)):
-        for x in range(len(Matrix[0])):
-            check1 = checkHor(y, x, Matrix)
-            check2 = checkVert(y, x, Matrix)
-            check3 = blah(y, x, Matrix)
-            count =  check1 + check2 + check3
-            if Matrix[y][x] == 1 and count == 0:
-                newMatrix[y][x] = 2
-            elif Matrix[y][x] == 2 and count > 4:
-                newMatrix[y][x] = 1
+    for y in range(HEIGHT):
+        for x in range(WIDTH):
+            count =  checkHor(y, x) + checkVert(y, x) + checkDiagonal(y, x)
+            if Matrix[y][x] == 'L' and count == 0:
+                newMatrix[y][x] = '#'
+            elif Matrix[y][x] == '#' and count > 4:
+                newMatrix[y][x] = 'L'
     return newMatrix
 
-def checkHor(y, x, Matrix):
-    count1 = None
-    count2 = None
+def checkHor(y, x):
+    count = 0
     i = x-1
-    while i > -1 and count1 == None:
-        if Matrix[y][i] == 2:
-            count1 = 1 
-        elif Matrix[y][i] == 1:
-            count1 = 0
+    while i in range(WIDTH):
+        if Matrix[y][i] == '#':
+            count += 1
+            break
+        elif Matrix[y][i] == 'L':
+            break
         i -= 1
+    """while i in range(WIDTH):
+        if Matrix[y][i] != '.':
+            break
+        i -= 1
+    count += int(Matrix[y][i] == '#')"""
     i = x + 1
-    while i < len(Matrix[0]) and count2 == None:
-        if Matrix[y][i] == 2:
-            count2 = 1 
-        elif Matrix[y][i] == 1:
-            count2 = 0
+    while i in range(WIDTH):
+        if Matrix[y][i] == '#':
+            count += 1
+            break
+        elif Matrix[y][i] == 'L':
+            break
         i += 1
-    if count1 == None:
-        count1 = 0
-    if count2 == None:
-        count2 = 0
-    return count1+count2
+    return count
 
-def checkVert(y, x, Matrix):
-    count1 = None
-    count2 = None
+def checkVert(y, x):
+    count = 0
     i = y-1
-    while i > -1 and count1 == None:
-        if Matrix[i][x] == 2:
-            count1 = 1 
-        elif Matrix[i][x] == 1:
-            count1 = 0
+    while i in range(HEIGHT):
+        if Matrix[i][x] == '#':
+            count += 1
+            break
+        elif Matrix[i][x] == 'L':
+            break
         i -= 1
     i = y + 1
-    while i < len(Matrix) and count2 == None:
-        if Matrix[i][x] == 2:
-            count2 = 1 
-        elif Matrix[i][x] == 1:
-            count2 = 0
+    while i in range(HEIGHT):
+        if Matrix[i][x] == '#':
+            count += 1
+            break
+        elif Matrix[i][x] == 'L':
+            break
         i += 1
-    if count1 == None:
-        count1 = 0
-    if count2 == None:
-        count2 = 0
-    return count1+count2
+    return count
 
-def blah(y, x, Matrix):
+def checkDiagonal(y, x):
     a = [-1, 1]
     b = [-1, 1]
     count = 0
 
     for i in range(2):
         for j in range(2):
-            count += checkDiagonal(y, x, Matrix, a[i], b[j])
+            count += runDiagonal(y, x, a[i], b[j])
 
     return count
 
-def checkDiagonal(y, x, Matrix, a, b):
+def runDiagonal(y, x, a, b):
     i = y + a
     j = x + b
 
-    while (i > -1 and i < len(Matrix)) and (j > -1 and j < len(Matrix[0])):
-        if Matrix[i][j] == 2:
+    while i in range(HEIGHT) and j in range(WIDTH):
+        if Matrix[i][j] == '#':
             return 1
-        elif Matrix[i][j] == 1:
+        elif Matrix[i][j] == 'L':
             return 0
         j += b
         i += a
     return 0
 
-
-lines = get_lines()
-
-Matrix = [[0 for x in range(len(lines[0]))] for y in range(len(lines))]
 lastState = None
-
-for y in range(len(lines)):
-    for x in range(len(lines[0])):
-        if lines[y][x] == 'L':
-            Matrix[y][x] = 1
-
 i = 0
 while (lastState != Matrix):
     i += 1
     lastState = Matrix[:]
-    Matrix = doLogic(Matrix)
+    Matrix = doLogic()
 
-total = 0
-for y in range(len(lines)):
-    for x in range(len(lines[0])):
-        if Matrix[y][x] == 2:
-            total += 1
-
-
-for item in Matrix:
-    print(item)
+total = sum([sum([1 if s == '#' else 0 for s in row]) for row in Matrix])
 print(total)
-print(i)

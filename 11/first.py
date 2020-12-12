@@ -46,5 +46,6 @@ for y in range(len(lines)):
         if Matrix[y][x] == 2:
             total += 1
 
+
 print(total)
 print(i)
