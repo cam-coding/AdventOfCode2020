@@ -1,43 +1,37 @@
+import copy
+
 def get_lines():
     with open("input.txt") as f:
-        return [line.strip() for line in f.readlines()]
+        return [line.strip() for line in f.readlines() if line.strip()]
 
-def run_program(commands):
+def FindBadLines(commands):
+    for i in range(len(commands)):
+        if commands[i][0] == "acc":
+            continue
+        fresh = copy.deepcopy(commands)
+        fresh[i] = ("jmp", fresh[i][1]) if commands[i][0] == "nop" else ("nop", fresh[i][1])
+        result = RunProgram(fresh)
+        if result[0]:
+            return result[1]
+    return None
+
+def RunProgram(fresh):
     pc=0
-    while pc < len(commands):
-        if commands[pc][0] == 'nop' or commands[pc][0] == 'jmp':
-            if(pc + commands[pc][1] > 631):
-                print(pc)
-        pc += 1
-    print("sad")
-
     counter = []
     value = 0
-    while pc < len(commands):
+    while pc < len(fresh):
         if pc not in counter:
             counter.append(pc)
         else:
-            print("doubled")
-            return value
-        
-        if commands[pc][0] == 'acc':
-            value = value + commands[pc][1]
-        elif commands[pc][0] == 'jmp':
-            temp = pc + commands[pc][1]
-            if temp in counter:
-                return pc
-            pc = temp -1
+            return False, value
+        if fresh[pc][0] == 'acc':
+            value = value + fresh[pc][1]
+        elif fresh[pc][0] == 'jmp':
+            pc = pc + fresh[pc][1] - 1
         pc += 1
-    print("found End")
-    return value
 
-commands = []
-for line in get_lines():
-    tokens = line.split()
-    number = 0
-    number = int(tokens[1][1:])
-    if tokens[1][0] == '-':
-        number = number * -1
-    commands.append((tokens[0], number))
+    return True, value
 
-print(run_program(commands))
+commands = [line.split() for line in get_lines()]
+commands = [(com, int(num)) for com, num in commands]
+print(FindBadLines(commands))

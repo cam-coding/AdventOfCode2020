@@ -27,11 +27,6 @@ def checkHor(y, x):
         elif Matrix[y][i] == 'L':
             break
         i -= 1
-    """while i in range(WIDTH):
-        if Matrix[y][i] != '.':
-            break
-        i -= 1
-    count += int(Matrix[y][i] == '#')"""
     i = x + 1
     while i in range(WIDTH):
         if Matrix[y][i] == '#':
