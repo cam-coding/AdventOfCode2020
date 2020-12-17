@@ -27,7 +27,8 @@ def AddToDict(last, counter):
     if last not in dicts:
         dicts[last] = [counter, None]
     else:
-        dicts[last] = [counter, dicts[last][0]]
+        dicts[last][1] = dicts[last][0]
+        dicts[last][0] = counter
 
 Lines = get_lines()
 print(doThing(30000000))
