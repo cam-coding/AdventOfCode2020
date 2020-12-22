@@ -24,14 +24,14 @@ def play_war_recursion(p1, p2, top):
     if not top:
         if max(p1) > max(p2):
             return 0
-    roundStorage = []
+    roundStorage = set()
     cards = [0, 0]
     decks = [p1, p2]
     while len(decks[0]) > 0 and len(decks[1]) > 0:
-        for round in roundStorage:
-            if decks[0] == round[0] and decks[1] == round[1]:
-                return 0
-        roundStorage.append(copy.deepcopy(decks))
+        tuples = (tuple(decks[0]), tuple(decks[1]))
+        if tuples in roundStorage:
+            return 0
+        roundStorage.add(tuples)
         for i in range(2): cards[i] = decks[i].pop(0)
 
         winner = 0
@@ -46,8 +46,6 @@ def play_war_recursion(p1, p2, top):
     return int(len(decks[0]) == 0)
 
 def calc_score(deck):
-    print(len(deck))
-    print(deck[0])
     print(sum([count * card for count, card in enumerate(reversed(deck), 1)]))
 
 decks = get_decks()
